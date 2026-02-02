@@ -201,6 +201,9 @@ Login to your registry (example: Docker Hub):
 docker login
 ```
 
+# Tag your image (replace YOUR_USERNAME with your Docker Hub username)
+docker tag my-submission:latest YOUR_USERNAME/my-submission:latest
+
 Push the image:
 
 ```bash
