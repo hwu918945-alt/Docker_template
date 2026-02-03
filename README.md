@@ -154,6 +154,7 @@ If you choose to use your own inference code, please ensure that the input and o
 4).  There is no need to include the data directory in the Docker image; only the source code required for inference should be provided.
 
 5). Do not modify the `--data-json` and `--out-dir` argument in `inference.py`.
+
 ---
 ## 🐳 Step 3: Build Docker Image
 
