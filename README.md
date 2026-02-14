@@ -177,8 +177,8 @@ Before submission, you **must** test your image locally using the example data p
 ```bash
 docker run --rm --gpus all \
   -u $(id -u):$(id -g) \
-  -v /path/to/sample_data:/data \
-  -v /path/to/output:/output \
+  -v /path/to/sample_data:/ws/data \
+  -v /path/to/output:/ws/output \
   <username>/fetus2026_<teamname>_submission:latest
 ```
 
