@@ -29,8 +29,8 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/fetus2026_submission:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/fetus2026_submission:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/fetus2026_sfw:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/fetus2026_sfw:${{ github.sha }}
           build-args: |
             USER_ID=1000
             GROUP_ID=1000
