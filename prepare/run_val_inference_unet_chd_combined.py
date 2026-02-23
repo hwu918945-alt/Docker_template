@@ -12,6 +12,9 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+_sys_p = Path(__file__).resolve().parent
+if str(_sys_p) not in sys.path:
+    sys.path.insert(0, str(_sys_p))
 from typing import Dict, List, Optional, Tuple
 
 import h5py
@@ -27,15 +30,11 @@ except Exception:  # pragma: no cover
 
 logger = logging.getLogger("val_infer_unet_chd")
 
-DEFAULT_SEG_CKPT = Path("/gpfs/work/aac/haoyuwu24/SupContrast/unet_runs/plan_701_revise/best.pth")
-DEFAULT_CLS_SCRIPT = Path(
-    "/gpfs/work/aac/haoyuwu24/dinov3/infer_full_pos7_hist_rel_v2_revise_vote_v2.py"
-)
-DEFAULT_CLS_CKPT = Path(
-    "/gpfs/work/aac/haoyuwu24/dinov3/outputs/FULL_pos7_hist_rel_vote_v2/best_fc_stage1_k4.pt"
-)
-DEFAULT_CLS_WEIGHTS = Path("/gpfs/work/aac/haoyuwu24/dinov3/dinov3/weights/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth")
-DEFAULT_CLS_DISEASE_JSON = Path("/gpfs/work/aac/haoyuwu24/cls_index_find/disease_cases.json")
+DEFAULT_SEG_CKPT = Path("/ws/prepare/best.pth")
+DEFAULT_CLS_SCRIPT = Path("/ws/prepare/infer_full_pos7_hist_rel_v2_revise_vote_v2.py")
+DEFAULT_CLS_CKPT = Path("/ws/prepare/best_fc.pt")
+DEFAULT_CLS_WEIGHTS = Path("/ws/prepare/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth")
+DEFAULT_CLS_DISEASE_JSON = Path("/ws/prepare/disease_cases.json")
 DEFAULT_CLS_THRESHOLDS = "0.5,0.5,0.5,0.5,0.5,0.5,0.5"
 
 
@@ -281,9 +280,16 @@ def load_seg_config(ckpt_path: Path) -> SegConfig:
     bilinear = bool(args.get("bilinear", False))
     nnunet_plan = args.get("nnunet_plan", None)
     nnunet_plan = Path(nnunet_plan) if nnunet_plan else None
+    if nnunet_plan is None or not nnunet_plan.exists():
+        local_plan = Path(__file__).resolve().parent / "nnUNetPlans.json"
+        if local_plan.exists():
+            nnunet_plan = local_plan
     nnunet_plan_config = str(args.get("nnunet_plan_config", "2d"))
     plan_override = bool(args.get("plan_override", False))
     use_plan_arch = bool(args.get("use_plan_arch", False))
+    if nnunet_plan is not None and nnunet_plan.exists():
+        # Force PlanUNet when plan file is available to match trained checkpoints.
+        use_plan_arch = True
 
     # Apply plan override (same as train_unet_chd.py)
     if nnunet_plan is not None and nnunet_plan.exists() and plan_override:
@@ -322,11 +328,11 @@ def load_nnunet_plan(plan_path: Path, config: str) -> Dict[str, object]:
 
 
 def build_unet_model(cfg: SegConfig) -> torch.nn.Module:
-    # Import UNet/PlanUNet from train_unet_chd.py
-    repo_root = Path("/gpfs/work/aac/haoyuwu24")
+    # Import UNet/PlanUNet from local train_unet_chd.py
+    repo_root = Path(__file__).resolve().parent
     if str(repo_root) not in sys.path:
         sys.path.insert(0, str(repo_root))
-    from SupContrast.unet.train_unet_chd import PlanUNet, UNet  # type: ignore
+    from train_unet_chd import PlanUNet, UNet  # type: ignore
 
     if cfg.use_plan_arch and cfg.nnunet_plan is not None and cfg.nnunet_plan.exists():
         plan_cfg = load_nnunet_plan(cfg.nnunet_plan, cfg.nnunet_plan_config)
@@ -574,9 +580,10 @@ def run_cls(args, json_path: Path, label_dir: Path, cls_out: Path):
         cmd += ["--device", str(args.cls_device)]
     env = os.environ.copy()
     py_path = env.get("PYTHONPATH", "")
-    env["PYTHONPATH"] = f"/gpfs/work/aac/haoyuwu24/dinov3{':' + py_path if py_path else ''}"
+    repo_root = Path(__file__).resolve().parent
+    env["PYTHONPATH"] = f"{repo_root}{':' + py_path if py_path else ''}"
     logger.info("Running classifier: %s", " ".join(cmd))
-    subprocess.run(cmd, check=True, env=env, cwd=Path("/gpfs/work/aac/haoyuwu24/dinov3"))
+    subprocess.run(cmd, check=True, env=env, cwd=repo_root)
 
 
 def collect_cls_outputs(
@@ -794,3 +801,6 @@ PYTHONPATH=. python /gpfs/work/aac/haoyuwu24/dinov3/train_fc_patch_fullimg_film_
   --mix-bias-max 0.3
 
 """
+
+
+
