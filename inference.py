@@ -70,7 +70,7 @@ def parse_args():
     p.add_argument("--tmp-dir", default=os.environ.get("TMP_DIR", "/tmp/val_infer_unet"))
 
     p.add_argument("--seg-ckpt", default=str(_default_path("SEG_CKPT", "prepare/best.pth")))
-    p.add_argument("--cls-script", default=str(_default_path("CLS_SCRIPT", "infer_full_pos7_hist_rel_v2_revise_vote_v2.py")))
+    p.add_argument("--cls-script", default=str(_default_path("CLS_SCRIPT", "prepare/infer_full_pos7_hist_rel_v2_revise_vote_v2.py")))
     p.add_argument("--cls-ckpt", default=str(_default_path("CLS_CKPT", "prepare/best_fc.pt")))
     p.add_argument("--cls-weights", default=str(_default_path("CLS_WEIGHTS", "prepare/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth")))
     p.add_argument("--cls-disease-json", default=str(_default_path("CLS_DISEASE_JSON", "cls_index_find/disease_cases.json")))
@@ -99,7 +99,7 @@ def main() -> int:
 
     cmd = [
         sys.executable,
-        str(REPO_ROOT / "run_val_inference_unet_chd_combined.py"),
+        str(REPO_ROOT / "prepare/run_val_inference_unet_chd_combined.py"),
         "--images",
         str(images_dir),
         "--json",
@@ -130,3 +130,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
