@@ -244,6 +244,9 @@ def _parse_thresholds(raw: str | None) -> list[float] | None:
     if raw is None:
         return None
     s = str(raw).strip()
+    # tolerate quoted list strings like "[0.5,0.5,...]"
+    if (s.startswith("\"") and s.endswith("\"")) or (s.startswith("'") and s.endswith("'")):
+        s = s[1:-1].strip()
     if not s:
         return None
     if s.startswith("[") or s.startswith("{"):
@@ -581,7 +584,15 @@ def run_cls(args, json_path: Path, label_dir: Path, cls_out: Path):
     env = os.environ.copy()
     py_path = env.get("PYTHONPATH", "")
     repo_root = Path(__file__).resolve().parent
-    env["PYTHONPATH"] = f"{repo_root}{':' + py_path if py_path else ''}"
+    dinov3_root = repo_root / "dinov3"
+    extra = str(dinov3_root) if dinov3_root.exists() else ""
+    base = str(repo_root)
+    parts = [base]
+    if extra:
+        parts.append(extra)
+    if py_path:
+        parts.append(py_path)
+    env["PYTHONPATH"] = ":".join(parts)
     logger.info("Running classifier: %s", " ".join(cmd))
     subprocess.run(cmd, check=True, env=env, cwd=repo_root)
 
