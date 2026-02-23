@@ -24,8 +24,8 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v5
         with:
-          context: ./docker_local/docker_submission_template
-          file: ./docker_local/docker_submission_template/Dockerfile
+          context: .
+          file: ./Dockerfile
           platforms: linux/amd64
           push: true
           tags: |
