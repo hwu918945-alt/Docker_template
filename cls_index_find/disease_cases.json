@@ -1,0 +1,83 @@
+{
+  "Ventricular Septal Defect(VSD)": [
+    "1072",
+    "1118",
+    "1213",
+    "1310",
+    "2400",
+    "283",
+    "296",
+    "318",
+    "319",
+    "366",
+    "370",
+    "381",
+    "382",
+    "402",
+    "491",
+    "497",
+    "525",
+    "579",
+    "585"
+  ],
+  "Atrioventricular Valve Stenosis/Atresia(AV Valve Stenosis/Atresia)": [
+    "1117",
+    "2400",
+    "462",
+    "525",
+    "905",
+    "965"
+  ],
+  "Aortic Hypoplasia(Aortic Hypoplasia)": [
+    "1090",
+    "1213",
+    "1220",
+    "1792",
+    "1810",
+    "283",
+    "405",
+    "815",
+    "849",
+    "975"
+  ],
+  "Aortic Valve Stenosis(Aortic Valve Stenosis)": [
+    "1154",
+    "1798",
+    "255",
+    "906"
+  ],
+  "Double Outlet Right Ventricle(DORV)": [
+    "1851",
+    "2048",
+    "208",
+    "327",
+    "448",
+    "526",
+    "819",
+    "970"
+  ],
+  "Pulmonary Valve Stenosis(Pulmonary Valve Stenosis)": [
+    "1009",
+    "1275",
+    "1386",
+    "183",
+    "208",
+    "2121",
+    "270",
+    "274",
+    "275",
+    "369",
+    "403",
+    "463"
+  ],
+  "Right Aortic Arch(Right Aortic Arch)": [
+    "198",
+    "210",
+    "232",
+    "275",
+    "297",
+    "311",
+    "329",
+    "369"
+  ]
+}
