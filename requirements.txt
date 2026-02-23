@@ -5,5 +5,8 @@ Pillow==10.1.0
 scikit_learn==1.7.0
 scipy==1.15.3
 scikit-image==0.25.1
-torch==2.1.2
+# PyTorch CUDA 11.8 wheels (match base image CUDA 11.8)
+--extra-index-url https://download.pytorch.org/whl/cu118
+torch==2.1.2+cu118
+torchvision==0.16.2+cu118
 tqdm==4.65.2
